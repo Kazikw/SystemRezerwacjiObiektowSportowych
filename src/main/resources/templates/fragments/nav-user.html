@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header(active)">
+    <nav>
+        <a th:href="@{/user/dashboard}" th:classappend="${active == 'dashboard'} ? 'active'"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a th:href="@{/reservations/user/my-reservations}" th:classappend="${active == 'my-reservations'} ? 'active'"><i class="fas fa-calendar-alt"></i> Moje Rezerwacje</a>
+        <a th:href="@{/reservations/create}" th:classappend="${active == 'create'} ? 'active'"><i class="fas fa-plus-circle"></i> Zarezerwuj</a>
+        <a th:href="@{/}" th:classappend="${active == 'search'} ? 'active'"><i class="fas fa-users"></i> Znajdź Rezerwację</a>
+        <a th:href="@{/user/my-profile}" th:classappend="${active == 'profile'} ? 'active'"><i class="fas fa-user-circle"></i> Mój Profil</a>
+    </nav>
+    <form th:action="@{/logout}" method="post" style="margin:0;">
+        <button type="submit" class="logout-button"><i class="fas fa-sign-out-alt"></i> Wyloguj się</button>
+    </form>
+</header>
+</body>
+</html>

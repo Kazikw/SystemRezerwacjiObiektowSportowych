@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Szczegóły Rezerwacji — Orlik Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav-user :: header('my-reservations')}"></div>
+
+<main>
+    <div class="container">
+        <h1>Szczegóły Rezerwacji</h1>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+        <h2>Dane</h2>
+        <p><strong>Obiekt:</strong> <span th:text="${reservation.facility.name}"></span></p>
+        <p><strong>Organizator:</strong> <span th:text="${reservation.reserver.firstName} + ' (' + ${reservation.reserver.email} + ')'"></span></p>
+        <p><strong>Data:</strong> <span th:text="${reservation.date}"></span></p>
+        <p><strong>Godziny:</strong> <span th:text="${reservation.startTime} + ' - ' + ${reservation.endTime}"></span></p>
+        <p><strong>Status:</strong> <span class="status-badge" th:classappend="'status-' + ${reservation.status.displayName}" th:text="${reservation.status.displayName}"></span></p>
+
+        <h2>Uczestnicy (<span th:text="${reservation.participants.size()} + '/' + ${reservation.requiredParticipants}"></span>)</h2>
+        <ul style="list-style:none; padding:0;">
+            <li th:each="participant : ${reservation.participants}" style="display:flex; justify-content:space-between; align-items:center; background:#f8f9fa; padding:12px; border-radius:6px; margin-bottom:8px;">
+                <span th:text="${participant.firstName} + ' (' + ${participant.email} + ')'"
+                      th:style="${participant.id == reservation.reserver.id} ? 'font-weight:bold;'"></span>
+                <span th:if="${participant.id == reservation.reserver.id}"><em>(Organizator)</em></span>
+                <form th:if="${isReserver and participant.id != reservation.reserver.id}"
+                      th:action="@{'/reservations/' + ${reservation.id} + '/remove-participant'}" method="post"
+                      onsubmit="return confirm('Usunąć tego uczestnika?')">
+                    <input type="hidden" name="participantId" th:value="${participant.id}">
+                    <button type="submit" class="btn btn-danger">Usuń</button>
+                </form>
+            </li>
+        </ul>
+
+        <div style="margin-top:30px;">
+            <a th:href="@{/reservations/user/my-reservations}" class="btn btn-secondary">Powrót</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

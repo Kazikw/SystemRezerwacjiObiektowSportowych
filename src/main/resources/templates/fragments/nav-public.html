@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header">
+    <nav>
+        <a th:href="@{/}"><i class="fas fa-search"></i> Znajdź Rezerwację</a>
+    </nav>
+    <div>
+        <a th:href="@{/login}" class="header-button login-button"><i class="fas fa-sign-in-alt"></i> Zaloguj się</a>
+        <a th:href="@{/register}" class="header-button register-button"><i class="fas fa-user-plus"></i> Zarejestruj się</a>
+    </div>
+</header>
+</body>
+</html>

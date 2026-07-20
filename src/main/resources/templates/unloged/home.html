@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Orlik Booking — Znajdź Rezerwację</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<!--<div th:replace="~{fragments/nav-public :: header}"></div>-->
+<th:block th:if="${isLoggedIn}">
+    <div th:replace="~{fragments/nav-user :: header('search')}"></div>
+</th:block>
+<th:block th:unless="${isLoggedIn}">
+    <div th:replace="~{fragments/nav-public :: header}"></div>
+</th:block>
+<main>
+    <div class="container">
+        <h1><i class="fas fa-search"></i> Znajdź Rezerwację</h1>
+
+        <form method="get" th:action="@{/public/search}">
+            <div>
+                <label for="city">Wybierz miasto:</label>
+                <select name="city" id="city" required>
+                    <option value="" selected disabled>-- wybierz --</option>
+                    <option th:each="city : ${cities}" th:value="${city.name}" th:text="${city.name}"></option>
+                </select>
+            </div>
+
+            <div>
+                <label for="facilityId">Wybierz obiekt:</label>
+                <select name="facilityId" id="facilityId" required disabled>
+                    <option value="" selected disabled>-- najpierw wybierz miasto --</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="date">Wybierz dzień:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <button type="submit">🔍 Wyszukaj dostępność</button>
+        </form>
+    </div>
+</main>
+
+<script th:inline="javascript">
+    const citySelect = document.getElementById("city");
+    const facilitySelect = document.getElementById("facilityId");
+
+    citySelect.addEventListener('change', function () {
+        facilitySelect.innerHTML = '<option value="" disabled selected>-- ładowanie... --</option>';
+        facilitySelect.disabled = true;
+
+        fetch("/index/getFacilities?city=" + encodeURIComponent(this.value))
+            .then(response => response.json())
+            .then(data => {
+                facilitySelect.innerHTML = '<option value="" disabled selected>-- wybierz --</option>';
+                data.forEach(facility => {
+                    const option = document.createElement("option");
+                    option.value = facility.id;
+                    option.text = facility.name;
+                    facilitySelect.appendChild(option);
+                });
+                facilitySelect.disabled = false;
+            });
+    });
+</script>
+</body>
+</html>

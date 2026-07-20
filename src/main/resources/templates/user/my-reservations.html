@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Moje Rezerwacje — Orlik Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav-user :: header('my-reservations')}"></div>
+
+<main>
+    <div class="container">
+        <h1>Moje Rezerwacje</h1>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+        <div th:if="${#lists.isEmpty(reservations)}" style="text-align:center; padding:40px;">
+            <p>Nie masz jeszcze żadnych rezerwacji.</p>
+            <a th:href="@{/reservations/create}">Zarezerwuj coś teraz!</a>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(reservations)}" class="cards-grid">
+            <div th:each="item : ${reservations}" class="card" th:with="r=${item.reservation}">
+                <p><strong>Obiekt:</strong> <span th:text="${r.facility.name}"></span></p>
+                <p><strong>Data:</strong> <span th:text="${r.date}"></span></p>
+                <p><strong>Godziny:</strong> <span th:text="${r.startTime} + ' - ' + ${r.endTime}"></span></p>
+                <p><strong>Status:</strong> <span class="status-badge" th:classappend="'status-' + ${r.status}" th:text="${r.status}"></span></p>
+                <p><strong>Rola:</strong> <span th:text="${item.owner ? 'Organizator' : 'Uczestnik'}"></span></p>
+                <p><strong>Uczestnicy:</strong> <span th:text="${r.participants.size()} + '/' + ${r.requiredParticipants}"></span></p>
+
+                <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <a th:href="@{'/reservations/' + ${r.id}}" class="btn btn-primary">Szczegóły</a>
+
+                    <form th:if="${item.owner}" th:action="@{'/reservations/' + ${r.id} + '/cancel'}" method="post"
+                          onsubmit="return confirm('Na pewno anulować rezerwację?')">
+                        <button type="submit" class="btn btn-danger">Anuluj</button>
+                    </form>
+
+                    <form th:unless="${item.owner}" th:action="@{'/reservations/' + ${r.id} + '/leave'}" method="post"
+                          onsubmit="return confirm('Na pewno opuścić rezerwację?')">
+                        <button type="submit" class="btn btn-secondary">Opuść</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${totalPages > 0}" style="display:flex; justify-content:center; gap:10px; margin-top:30px;">
+            <a th:if="${currentPage > 0}"
+               th:href="@{/reservations/user/my-reservations(page=${currentPage - 1}, size=${pageSize})}"
+               class="btn btn-primary">Poprzednia</a>
+            <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}" style="padding:8px 12px;">
+                <a th:if="${i != currentPage}"
+                   th:href="@{/reservations/user/my-reservations(page=${i}, size=${pageSize})}"
+                   th:text="${i + 1}"></a>
+                <strong th:if="${i == currentPage}" th:text="${i + 1}"></strong>
+            </span>
+            <a th:if="${currentPage < totalPages - 1}"
+               th:href="@{/reservations/user/my-reservations(page=${currentPage + 1}, size=${pageSize})}"
+               class="btn btn-primary">Następna</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

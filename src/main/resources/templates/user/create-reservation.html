@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Utwórz Rezerwację — Orlik Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav-user :: header('create')}"></div>
+
+<main style="max-width: 700px;">
+    <div class="container">
+        <h1>Utwórz Nową Rezerwację</h1>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+        <form th:action="@{/reservations/create}" th:object="${reservationRequest}" method="post">
+            <div>
+                <label for="facilityId">Wybierz Obiekt:</label>
+                <select id="facilityId" th:field="*{facilityId}" required>
+                    <option value="">-- Wybierz obiekt --</option>
+                    <option th:each="facility : ${facilities}"
+                            th:value="${facility.id}"
+                            th:text="${facility.name} + ' (' + ${facility.city.name} + ')'"></option>
+                </select>
+                <small style="color:var(--danger)" th:if="${#fields.hasErrors('facilityId')}" th:errors="*{facilityId}"></small>
+            </div>
+
+            <div>
+                <label for="date">Data:</label>
+                <input type="date" id="date" th:field="*{date}" required>
+                <small style="color:var(--danger)" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></small>
+            </div>
+
+            <div>
+                <label for="startTime">Godzina Rozpoczęcia:</label>
+                <select id="startTime" th:field="*{startTime}" required>
+                    <option value="" disabled selected>-- Wybierz godzinę --</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                </select>
+                <small style="color:var(--danger)" th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"></small>
+            </div>
+
+            <div>
+                <input type="checkbox" id="groupReservation" th:field="*{groupReservation}" style="width:auto;">
+                <label for="groupReservation" style="display:inline;">Rezerwacja Grupowa</label>
+            </div>
+
+            <div id="groupOptions">
+                <label for="requiredParticipants">Wymagana liczba uczestników:</label>
+                <input type="number" id="requiredParticipants" th:field="*{requiredParticipants}">
+<!--                <input type="number" id="requiredParticipants" th:field="*{requiredParticipants}" min="2" max="30">-->
+                <small style="color:var(--danger)" th:if="${#fields.hasErrors('requiredParticipants')}" th:errors="*{requiredParticipants}"></small>
+
+                <div style="margin-top:10px;">
+                    <input type="checkbox" id="allowJoin" th:field="*{allowJoin}" style="width:auto;">
+                    <label for="allowJoin" style="display:inline;">Pozwól innym dołączyć</label>
+                </div>
+            </div>
+
+            <button type="submit">Utwórz Rezerwację</button>
+        </form>
+    </div>
+</main>
+<script>
+    const groupCheckbox = document.getElementById('groupReservation');
+    const groupOptions = document.getElementById('groupOptions');
+    const requiredParticipantsInput = document.getElementById('requiredParticipants');
+
+    function toggleGroupOptions() {
+        const isChecked = groupCheckbox.checked;
+        groupOptions.style.display = isChecked ? 'block' : 'none';
+        requiredParticipantsInput.disabled = !isChecked; // Wyłącza pole, gdy jest niewidoczne
+    }
+    groupCheckbox.addEventListener('change', toggleGroupOptions);
+    toggleGroupOptions();
+</script>
+<!--<script>-->
+<!--    const groupCheckbox = document.getElementById('groupReservation');-->
+<!--    const groupOptions = document.getElementById('groupOptions');-->
+
+<!--    function toggleGroupOptions() {-->
+<!--        groupOptions.style.display = groupCheckbox.checked ? 'block' : 'none';-->
+<!--    }-->
+<!--    groupCheckbox.addEventListener('change', toggleGroupOptions);-->
+<!--    toggleGroupOptions();-->
+<!--</script>-->
+</body>
+</html>

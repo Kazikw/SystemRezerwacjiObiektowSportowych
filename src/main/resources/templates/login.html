@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Logowanie — Orlik Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav-public :: header}"></div>
+
+<main style="max-width: 420px;">
+    <div class="container">
+        <h1><i class="fas fa-lock"></i> Zaloguj się</h1>
+
+        <div th:if="${param.error}" class="alert alert-error">Nieprawidłowy login lub hasło.</div>
+        <div th:if="${param.logout}" class="alert alert-success">Zostałeś wylogowany.</div>
+
+        <form th:action="@{/login}" method="post">
+            <div>
+                <label for="username">Login:</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div>
+                <label for="password">Hasło:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit"><i class="fas fa-sign-in-alt"></i> Zaloguj</button>
+        </form>
+
+        <p style="text-align:center; margin-top:20px;">
+            <a th:href="@{/register}">Nie masz konta? Zarejestruj się</a>
+        </p>
+    </div>
+</main>
+</body>
+</html>
