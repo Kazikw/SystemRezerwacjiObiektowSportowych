@@ -11,7 +11,7 @@
 ## 📸 Zrzuty ekranu
 
 ![image alt](Znajdz.jpg)
-![image alt](hello,bmp)
+![image alt](hello.bmp)
 
 ## 🚀 O projekcie
 System rezerwacji boisk sportowych (Orlików) stworzony w środowisku Java / Spring Boot. 
