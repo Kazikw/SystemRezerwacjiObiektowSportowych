@@ -27,4 +27,9 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         return "redirect:/user/dashboard";
     }
+    @ExceptionHandler(Exception.class)
+    public String handleUnexpected(Exception ex, Model model) {
+        model.addAttribute("errorMessage", "Wystąpił nieoczekiwany błąd.");
+        return "error/500";
+    }
 }

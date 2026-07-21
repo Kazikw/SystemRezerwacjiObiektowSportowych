@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalendarz — Panel Admina</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav-admin :: header('calendar')}"></div>
+
+<main>
+    <div class="container">
+        <h1>Podgląd Kalendarza</h1>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+            <a class="btn btn-secondary"
+               th:href="@{/admin/calendar(date=${mondayDate.minusDays(7)}, selectedDay=${selectedDayIndex})}">
+                ← Poprzedni tydzień
+            </a>
+
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <a th:each="date, iter : ${weekDates}"
+                   class="btn"
+                   th:classappend="${iter.index == selectedDayIndex} ? 'btn-primary' : 'btn-secondary'"
+                   th:href="@{/admin/calendar(date=${mondayDate}, selectedDay=${iter.index})}"
+                   th:text="${date}">
+                </a>
+            </div>
+
+            <a class="btn btn-secondary"
+               th:href="@{/admin/calendar(date=${mondayDate.plusDays(7)}, selectedDay=${selectedDayIndex})}">
+                Następny tydzień →
+            </a>
+        </div>
+
+        <h2 th:text="'Rezerwacje na ' + ${selectedDate}"></h2>
+
+        <div th:if="${#lists.isEmpty(reservations)}">
+            <p>Brak rezerwacji na ten dzień.</p>
+        </div>
+
+        <table th:unless="${#lists.isEmpty(reservations)}">
+            <thead>
+            <tr><th>ID</th><th>Obiekt</th><th>Godzina</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${reservations}">
+                <td th:text="${r.id}"></td>
+                <td th:text="${r.facility.name} + ' (' + ${r.facility.city.name} + ')'"></td>
+                <td th:text="${r.startTime} + ' - ' + ${r.endTime}"></td>
+                <td><span class="status-badge" th:classappend="'status-' + ${r.status}" th:text="${r.status}"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

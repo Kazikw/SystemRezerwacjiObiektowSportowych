@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Rezerwacje — Panel Admina</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<!--<div th:replace="~{fragments/nav-admin :: header('reservations')}"></div>-->
+
+<main>
+    <div class="container">
+        <h1>Zarządzanie Rezerwacjami</h1>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <form th:action="@{/admin/reservations}" method="get" style="flex-direction:row; align-items:flex-end; flex-wrap:wrap; gap:20px;">
+            <div>
+                <label>Statusy</label>
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <label style="font-weight:normal;"><input type="checkbox" name="status" value="PENDING" style="width:auto;"> Oczekująca</label>
+                    <label style="font-weight:normal;"><input type="checkbox" name="status" value="CONFIRMED" style="width:auto;"> Potwierdzona</label>
+                    <label style="font-weight:normal;"><input type="checkbox" name="status" value="CANCELLED" style="width:auto;"> Odwołana</label>
+                    <label style="font-weight:normal;"><input type="checkbox" name="status" value="COMPLETED" style="width:auto;"> Zakończona</label>
+                </div>
+            </div>
+            <div>
+                <label for="dateFrom">Od</label>
+                <input type="date" id="dateFrom" name="dateFrom">
+            </div>
+            <div>
+                <label for="dateTo">Do</label>
+                <input type="date" id="dateTo" name="dateTo">
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button type="submit">Filtruj</button>
+                <a th:href="@{/admin/reservations}" class="btn btn-secondary">Wyczyść</a>
+            </div>
+        </form>
+
+        <table>
+            <thead>
+            <tr><th>ID</th><th>Użytkownik</th><th>Obiekt</th><th>Data</th><th>Godzina</th><th>Status</th><th>Zmień status</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${reservations}">
+                <td th:text="${r.id}"></td>
+                <td th:text="${r.reserver.firstName}"></td>
+                <td th:text="${r.facility.name}"></td>
+                <td th:text="${r.date}"></td>
+                <td th:text="${r.startTime} + ' - ' + ${r.endTime}"></td>
+                <td><span class="status-badge" th:classappend="'status-' + ${r.status}" th:text="${r.status}"></span></td>
+                <td>
+                    <form th:action="@{'/admin/reservations/' + ${r.id} + '/status'}" method="post" style="flex-direction:row; gap:8px;">
+                        <select name="status" style="width:auto;">
+                            <option value="PENDING" th:selected="${r.status.name() == 'PENDING'}">Oczekująca</option>
+                            <option value="CONFIRMED" th:selected="${r.status.name() == 'CONFIRMED'}">Potwierdzona</option>
+                            <option value="CANCELLED" th:selected="${r.status.name() == 'CANCELLED'}">Odwołana</option>
+                            <option value="COMPLETED" th:selected="${r.status.name() == 'COMPLETED'}">Zakończona</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Zmień</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(reservations)}">Brak rezerwacji spełniających kryteria.</p>
+    </div>
+</main>
+</body>
+</html>

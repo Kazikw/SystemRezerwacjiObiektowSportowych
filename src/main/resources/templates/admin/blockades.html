@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Blokady — Panel Admina</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:replace="~{fragments/nav-admin :: header('blockades')}"></div>
+
+<main>
+    <div class="container">
+        <h1>Zarządzanie Blokadami</h1>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+        <h2>Dodaj Blokadę</h2>
+        <form th:action="@{/admin/blockades}" th:object="${blockadeRequest}" method="post">
+            <div>
+                <label for="facilityId">Obiekt</label>
+                <select id="facilityId" th:field="*{facilityId}" required>
+                    <option value="">-- wybierz obiekt --</option>
+                    <option th:each="f : ${facilities}" th:value="${f.id}" th:text="${f.name}"></option>
+                </select>
+            </div>
+            <div>
+                <label for="startDate">Data rozpoczęcia</label>
+                <input type="date" id="startDate" th:field="*{startDate}" required>
+            </div>
+            <div>
+                <label for="endDate">Data zakończenia</label>
+                <input type="date" id="endDate" th:field="*{endDate}" required>
+            </div>
+            <div>
+                <label for="reason">Powód</label>
+                <input type="text" id="reason" th:field="*{reason}" required>
+            </div>
+            <button type="submit">Dodaj Blokadę</button>
+        </form>
+
+        <h2>Aktywne Blokady</h2>
+        <p th:if="${#lists.isEmpty(activeBlockades)}">Brak aktywnych blokad.</p>
+        <table th:unless="${#lists.isEmpty(activeBlockades)}">
+            <thead>
+            <tr><th>Obiekt</th><th>Od</th><th>Do</th><th>Powód</th><th>Akcje</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${activeBlockades}">
+                <td th:text="${b.facility.name}"></td>
+                <td th:text="${b.startDate}"></td>
+                <td th:text="${b.endDate}"></td>
+                <td th:text="${b.reason}"></td>
+                <td>
+                    <form th:action="@{'/admin/blockades/' + ${b.id} + '/deactivate'}" method="post"
+                          onsubmit="return confirm('Odblokować obiekt?')">
+                        <button type="submit" class="btn btn-primary">Odblokuj</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Historia Blokad</h2>
+        <p th:if="${#lists.isEmpty(pastBlockades)}">Brak historii blokad.</p>
+        <table th:unless="${#lists.isEmpty(pastBlockades)}">
+            <thead>
+            <tr><th>Obiekt</th><th>Od</th><th>Do</th><th>Powód</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${pastBlockades}">
+                <td th:text="${b.facility.name}"></td>
+                <td th:text="${b.startDate}"></td>
+                <td th:text="${b.endDate}"></td>
+                <td th:text="${b.reason}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
