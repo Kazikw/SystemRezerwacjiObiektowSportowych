@@ -9,9 +9,7 @@
 ---
 
 ## 📸 Zrzuty ekranu
-Znajdz.jpg
-![image alt](Znajdz.jpg)
-![image alt](https://github.com/Kazikw/SystemRezerwacjiObiektowSportowych/blob/977850343d21227f2fdd8938530d99a05c47acf0/Znajdz.jpg)
+![image alt]
 
 ## 🚀 O projekcie
 System rezerwacji boisk sportowych (Orlików) stworzony w środowisku Java / Spring Boot. 
