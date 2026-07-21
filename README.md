@@ -9,14 +9,7 @@
 ---
 
 ## 📸 Zrzuty ekranu
-https://github.com/Kazikw/SystemRezerwacjiObiektowSportowych/blob/f42a7ca8db947cff6b7420a6f0de1807447c8905/Znajdz.jpg
-https://github.com/Kazikw/SystemRezerwacjiObiektowSportowych/blob/2277a11dadd2e8fa80d895d73841da4056cf5a56/hello.bmp
-[Wyszukiwanie.bmp](https://github.com/user-attachments/files/30218399/Wyszukiwanie.bmp)
-[hello.bmp](https://github.com/user-attachments/files/30218397/hello.bmp)
-[aradzenieRe.bmp](https://github.com/user-attachments/files/30218406/aradzenieRe.bmp)
-[adminDB.bmp](https://github.com/user-attachments/files/30218405/adminDB.bmp)
-[PorierdRe.bmp](https://github.com/user-attachments/files/30218404/PorierdRe.bmp)
-
+Znajdz.jpg
 
 ## 🚀 O projekcie
 System rezerwacji boisk sportowych (Orlików) stworzony w środowisku Java / Spring Boot. 
